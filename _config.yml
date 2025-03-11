@@ -3,7 +3,7 @@ title: null
 
 # Dark mode configuration
 dark_mode: true
-
+encoding: UTF-8
 # GitHub Pages configuration
 github_pages:
   url: "https://<your-github-username>.github.io/<your-repo-name>"
