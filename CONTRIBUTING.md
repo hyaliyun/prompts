@@ -29,7 +29,7 @@ steps (in their personal fork):
 
 1. Create and test the new prompt.
    - See the
-     [README](https://github.com/f/awesome-chatgpt-prompts/blob/main/README.md)
+     [README](https://github.com/hyaliyun/prompts/blob/main/README.md)
      for guidance on how to write effective prompts.
    - Ensure prompts generate intended results and can be used by other users to
      replicate those results.

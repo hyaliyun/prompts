@@ -1,3 +1,5 @@
 source "https://rubygems.org"
-gem "jekyll", "~> 4.3.4"
-gem "sassc"
+
+gem "jekyll"
+
+gem "wdm", ">= 0.1.0" if Gem.win_platform?
