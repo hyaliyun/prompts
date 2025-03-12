@@ -297,7 +297,7 @@ function displaySearchResults(results) {
     const li = document.createElement("li");
     li.className = "search-result-item add-prompt";
     li.innerHTML = `
-    <a href="https://github.com/f/awesome-chatgpt-prompts/pulls" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+    <a href="https://github.com/hyaliyun/prompts/pulls" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -468,7 +468,7 @@ function createPromptCards() {
   const contributeCard = document.createElement("div");
   contributeCard.className = "prompt-card contribute-card";
   contributeCard.innerHTML = `
-    <a href="https://github.com/f/awesome-chatgpt-prompts/pulls" target="_blank" style="text-decoration: none; color: inherit; height: 100%; display: flex; flex-direction: column;">
+    <a href="https://github.com/hyaliyun/prompts/pulls" target="_blank" style="text-decoration: none; color: inherit; height: 100%; display: flex; flex-direction: column;">
     <div class="prompt-title" style="display: flex; align-items: center; gap: 8px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
@@ -798,7 +798,7 @@ function showModal(title, content) {
     const contributorBadge = promptCard.querySelector(".contributor-badge");
     if (contributorBadge) {
       modalContributor.href = contributorBadge.href;
-      modalContributor.textContent = `Contributed by ${contributorBadge.textContent}`;
+      modalContributor.textContent = `${contributorBadge.textContent}`;
     }
   }
 
@@ -910,6 +910,9 @@ function openInChat(button, encodedPrompt) {
   let url;
 
   switch (platform.dataset.platform) {
+    case "deepseek":
+      url = `${baseUrl}?prompt=${encodeURIComponent(promptText)}`;
+      break;
     case "github-copilot":
       url = `${baseUrl}?prompt=${encodeURIComponent(promptText)}`;
       break;

@@ -1,5 +1,5 @@
 <p align="center">
-<img width="395" alt="prompts.chat" src="https://github.com/user-attachments/assets/e0d0e32d-d2ce-4459-9f37-e951d9f4f5de" />
+<img width="395" alt="提示词" src="https://github.com/user-attachments/assets/e0d0e32d-d2ce-4459-9f37-e951d9f4f5de" />
 </p>
 
 <h3 align="center">Sponsors</h3>
@@ -23,13 +23,13 @@ Welcome to the "Awesome ChatGPT Prompts" repository! While this collection was o
 
 [ChatGPT](https://chat.openai.com/chat) is a web interface created by [OpenAI](https://openai.com) that provides access to their GPT (Generative Pre-trained Transformer) language models. The underlying models, like GPT-4o and GPT-o1, are large language models trained on vast amounts of text data that can understand and generate human-like text. Like other AI chat interfaces, you can provide prompts and have natural conversations with the AI, which will generate contextual responses based on the conversation history and your inputs.
 
-In this repository, you will find a variety of prompts that can be used with ChatGPT and other AI chat models. We encourage you to [add your own prompts](https://github.com/f/awesome-chatgpt-prompts/edit/main/README.md) to the list, and to use AI to help generate new prompts as well.
+In this repository, you will find a variety of prompts that can be used with ChatGPT and other AI chat models. We encourage you to [add your own prompts](https://github.com/hyaliyun/prompts/edit/main/README.md) to the list, and to use AI to help generate new prompts as well.
 
 To get started, simply clone this repository and use the prompts in the README.md file as input for your preferred AI chat model. You can also use the prompts in this file as inspiration for creating your own.
 
 We hope you find these prompts useful and have fun exploring AI chat models!
 
-**[View on prompts.chat](https://prompts.chat)**
+**[View on 提示词](https://提示词)**
 
 **[View on Hugging Face](https://huggingface.co/datasets/fka/awesome-chatgpt-prompts/)**
 ---
@@ -64,9 +64,9 @@ Images from Text"**.
 
 ---
 
-### Using prompts.chat
+### Using 提示词
 
-[prompts.chat](https://prompts.chat) is designed to provide an enhanced UX when
+[提示词](https://提示词) is designed to provide an enhanced UX when
 working with prompts. With just a few clicks, you can easily edit and copy the
 prompts on the site to fit your specific needs and preferences.
 
@@ -80,7 +80,7 @@ There are many Pull Requests to this repository waiting to be merged. There are
 many hidden gems there. Take a look!
 
 📖
-**[View Unmerged Prompts](https://github.com/f/awesome-chatgpt-prompts/pulls)**
+**[View Unmerged Prompts](https://github.com/hyaliyun/prompts/pulls)**
 
 ---
 
@@ -2676,7 +2676,7 @@ Contributed by: [@tscburak](https://github.com/tscburak)
 
 Many thanks to these AI whisperers:
 
-<a href="https://github.com/f/awesome-chatgpt-prompts/graphs/contributors">
+<a href="https://github.com/hyaliyun/prompts/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=f/awesome-chatgpt-prompts" />
 </a>
 
