@@ -1,4 +1,4 @@
-// Dark mode functionality
+// ==================== Dark Mode Functionality ====================
 function toggleDarkMode() {
   const body = document.body;
   const toggle = document.querySelector(".dark-mode-toggle");
@@ -13,7 +13,7 @@ function toggleDarkMode() {
   moonIcon.style.display = isDarkMode ? "block" : "none";
 }
 
-// Add these new functions at the top
+// ==================== Variable Extraction and Inputs ====================
 function extractVariables(text) {
   const regex = /\${([^}]+)}/g;
   const variables = [];
@@ -57,7 +57,7 @@ function createVariableInputs(variables, container) {
   return form;
 }
 
-// Function to update the prompt preview with user input or default values
+// ==================== Prompt Preview Update ====================
 function updatePromptPreview(promptText, form) {
   const variables = extractVariables(promptText);
 
@@ -66,7 +66,7 @@ function updatePromptPreview(promptText, form) {
   }
 
   let previewText = promptText;
-  // Replace variables with their default values without editting (for prompt cards, copy buttons, chat)
+  // Replace variables with their default values without editing (for prompt cards, copy buttons, chat)
   if (!form) {
     variables.forEach(variable => {
       const pattern = new RegExp(`\\$\{${variable.name}[^}]*\}`, 'g');
@@ -82,7 +82,7 @@ function updatePromptPreview(promptText, form) {
       const value = input.value.trim();
       const variable = input.dataset.variable;
       const defaultValue = input.dataset.default;
-    const pattern = new RegExp(`\\$\{${variable}[^}]*\}`, 'g');
+      const pattern = new RegExp(`\\$\{${variable}[^}]*\}`, 'g');
       let replacement;
       if (value) {
         // User entered value
@@ -102,83 +102,56 @@ function updatePromptPreview(promptText, form) {
   return previewText;
 }
 
-// Initialize everything after DOM loads
-document.addEventListener("DOMContentLoaded", () => {
-  // Initialize audience selector and dev mode
-  const audienceSelect = document.getElementById('audienceSelect');
-  const initialAudience = localStorage.getItem('audience') || 'everyone';
-  audienceSelect.value = initialAudience;
-  document.body.classList.toggle('dev-mode', initialAudience === 'developers');
+// ==================== Lazy Load Functionality ====================
+function initializeLazyLoad() {
+  const options = {
+    root: null, // 使用视口作为根元素
+    rootMargin: '0px', // 无额外的边距
+    threshold: 0.1 // 当元素 10% 进入视口时触发
+  };
 
-  // Handle audience changes
-  audienceSelect.addEventListener('change', (e) => {
-    const isDevMode = e.target.value === 'developers';
-    document.body.classList.toggle('dev-mode', isDevMode);
-    localStorage.setItem('audience', e.target.value);
-    
-    // Update chat button icons
-    updateChatButtonIcons(isDevMode);
-
-    // Check if we should show Copilot suggestion
-    if (isDevMode) {
-      const currentPlatform = document.querySelector(".platform-tag.active");
-      const shouldNotShow = localStorage.getItem("copilot-suggestion-hidden") === "true";
-
-      if (currentPlatform && 
-          currentPlatform.dataset.platform !== "github-copilot" && 
-          !shouldNotShow) {
-        showCopilotSuggestion();
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        loadPromptContent(card);
+        observer.unobserve(card); // 停止观察已经加载的卡片
       }
-    }
-
-    // Trigger prompt filtering
-    filterPrompts();
-  });
-
-  // Fetch GitHub stars
-  fetch("https://api.github.com/repos/f/awesome-chatgpt-prompts")
-    .then((response) => response.json())
-    .then((data) => {
-      const stars = data.stargazers_count;
-      document.getElementById("starCount").textContent = stars.toLocaleString();
-    })
-    .catch((error) => {
-      console.error("Error fetching star count:", error);
-      document.getElementById("starCount").textContent = "50k+";
     });
+  }, options);
 
-  // Create prompt cards
-  createPromptCards();
+  // 观察所有提示卡片
+  document.querySelectorAll('.prompt-card').forEach(card => {
+    observer.observe(card);
+  });
+}
 
-  // Initialize dark mode
-  const isDarkMode = localStorage.getItem("dark-mode");
-  const toggle = document.querySelector(".dark-mode-toggle");
-  const sunIcon = toggle.querySelector(".sun-icon");
-  const moonIcon = toggle.querySelector(".moon-icon");
+function loadPromptContent(card) {
+  const title = card.dataset.title;
+  const content = card.dataset.content;
 
-  // Set dark mode by default if not set
-  if (isDarkMode === null) {
-    localStorage.setItem("dark-mode", "true");
-    document.body.classList.add("dark-mode");
-    sunIcon.style.display = "none";
-    moonIcon.style.display = "block";
-  } else if (isDarkMode === "true") {
-    document.body.classList.add("dark-mode");
-    sunIcon.style.display = "none";
-    moonIcon.style.display = "block";
-  } else {
-    sunIcon.style.display = "block";
-    moonIcon.style.display = "none";
+  if (title && content) {
+    card.innerHTML = `
+      <div class="prompt-title">${title}</div>
+      <div class="prompt-content">${content}</div>
+      <div class="action-buttons">
+        <button class="chat-button" title="Open in AI Chat" onclick="openInChat(this, '${encodeURIComponent(content)}')">
+          <svg class="chat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </button>
+        <button class="copy-button" title="Copy prompt" onclick="copyPrompt(this, '${encodeURIComponent(content)}')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+          </svg>
+        </button>
+      </div>
+    `;
   }
+}
 
-  // Initialize search functionality
-  initializeSearch();
-
-  // Initialize language and tone selectors
-  initializeLanguageAndTone();
-});
-
-// Search functionality
+// ==================== Search Functionality ====================
 async function initializeSearch() {
   try {
     const response = await fetch("/prompts.csv");
@@ -393,72 +366,7 @@ function displaySearchResults(results) {
   });
 }
 
-// Function to filter prompts based on dev mode
-function filterPrompts() {
-  const isDevMode = document.getElementById("audienceSelect").value === "developers";
-  const searchInput = document.getElementById("searchInput");
-  const searchTerm = searchInput.value.toLowerCase();
-
-  // Re-fetch and filter prompts
-  fetch("/prompts.csv")
-    .then((response) => response.text())
-    .then((csvText) => {
-      const prompts = parseCSV(csvText);
-      const filteredPrompts = prompts.filter((prompt) => {
-        const matchesSearch =
-          !searchTerm ||
-          prompt.act.toLowerCase().includes(searchTerm) ||
-          prompt.prompt.toLowerCase().includes(searchTerm);
-
-        return isDevMode
-          ? matchesSearch && prompt.for_devs === true
-          : matchesSearch;
-      });
-
-      // Update count with filtered results
-      updatePromptCount(
-        filteredPrompts.length,
-        isDevMode
-          ? prompts.filter((p) => p.for_devs === true).length
-          : prompts.length
-      );
-      displaySearchResults(filteredPrompts);
-
-      // Update prompt cards visibility
-      const promptsGrid = document.querySelector(".prompts-grid");
-      if (promptsGrid) {
-        const cards = promptsGrid.querySelectorAll(
-          ".prompt-card:not(.contribute-card)"
-        );
-        cards.forEach((card) => {
-          const title = card.querySelector(".prompt-title").textContent.trim();
-          const matchingPrompt = prompts.find((p) => {
-            const pTitle = p.act
-              .replace(/\s+/g, " ")
-              .replace(/[\n\r]/g, "")
-              .trim();
-            const cardTitle = title
-              .replace(/\s+/g, " ")
-              .replace(/[\n\r]/g, "")
-              .trim();
-            return (
-              pTitle.toLowerCase() === cardTitle.toLowerCase() ||
-              pTitle.toLowerCase().includes(cardTitle.toLowerCase()) ||
-              cardTitle.toLowerCase().includes(pTitle.toLowerCase())
-            );
-          });
-
-          // Show card if not in dev mode or if it's a dev prompt in dev mode
-          card.style.display =
-            !isDevMode || (matchingPrompt && matchingPrompt.for_devs === true)
-              ? ""
-              : "none";
-        });
-      }
-    });
-}
-
-// Update the modal initialization and event listeners
+// ==================== Prompt Cards Creation ====================
 function createPromptCards() {
   const container = document.querySelector(".container-lg.markdown-body");
   const promptsGrid = document.createElement("div");
@@ -632,6 +540,7 @@ function createPromptCards() {
     });
 }
 
+// ==================== Modal Functionality ====================
 function initializeModalListeners() {
   const modalOverlay = document.getElementById("modalOverlay");
   const modalClose = document.querySelector(".modal-close");
@@ -839,10 +748,10 @@ function hideModal() {
   modalOverlay.remove();
 }
 
+// ==================== Platform Toggle Functionality ====================
 let selectedPlatform =
   localStorage.getItem("selected-platform") || "github-copilot"; // Get from localStorage or default to github
 
-// Platform toggle functionality
 document.querySelectorAll(".platform-tag").forEach((button) => {
   button.addEventListener("click", () => {
     document
@@ -898,7 +807,7 @@ document.querySelectorAll(".chat-button, .modal-chat-button").forEach((btn) => {
   btn.style.display = shouldHideChat ? "none" : "flex";
 });
 
-// Function to open prompt in selected AI chat platform
+// ==================== Open in Chat Functionality ====================
 function openInChat(button, encodedPrompt) {
   const promptText = buildPrompt(encodedPrompt);
   const platform = document.querySelector(".platform-tag.active");
@@ -911,7 +820,7 @@ function openInChat(button, encodedPrompt) {
 
   switch (platform.dataset.platform) {
     case "deepseek":
-      url = `${baseUrl}?prompt=${encodeURIComponent(promptText)}`;
+      url = `${baseUrl}?query=${encodeURIComponent(promptText)}`;
       break;
     case "github-copilot":
       url = `${baseUrl}?prompt=${encodeURIComponent(promptText)}`;
@@ -981,7 +890,7 @@ function buildPrompt(encodedPrompt) {
   return promptText;
 }
 
-// Existing copy function
+// ==================== Copy Prompt Functionality ====================
 async function copyPrompt(button, encodedPrompt) {
   try {
     const promptText = buildPrompt(encodedPrompt);
@@ -1000,7 +909,7 @@ async function copyPrompt(button, encodedPrompt) {
   }
 }
 
-// Function to handle chat button click in modal
+// ==================== Modal Chat Functionality ====================
 function openModalChat() {
   const modalContent = document.querySelector(".modal-content");
   if (modalContent) {
@@ -1009,7 +918,7 @@ function openModalChat() {
   }
 }
 
-// Add these functions before the closing script tag
+// ==================== Copilot Suggestion Functionality ====================
 function showCopilotSuggestion() {
   const modal = document.getElementById("copilotSuggestionModal");
   const backdrop = document.querySelector(".copilot-suggestion-backdrop");
@@ -1052,7 +961,7 @@ function hideCopilotSuggestion(switchToCopilot) {
   }
 }
 
-// Function to update chat button icons based on dev mode
+// ==================== Chat Button Icons Update ====================
 function updateChatButtonIcons(isDevMode) {
   document
     .querySelectorAll(".chat-button, .modal-chat-button")
@@ -1066,7 +975,7 @@ function updateChatButtonIcons(isDevMode) {
     });
 }
 
-// Language and Tone Selection
+// ==================== Language and Tone Selection ====================
 function initializeLanguageAndTone() {
   const languageSelect = document.getElementById('languageSelect');
   const customLanguage = document.getElementById('customLanguage');
@@ -1129,3 +1038,82 @@ function initializeLanguageAndTone() {
     localStorage.setItem('custom-tone', e.target.value);
   });
 }
+
+// ==================== Initialize Everything ====================
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize audience selector and dev mode
+  const audienceSelect = document.getElementById('audienceSelect');
+  const initialAudience = localStorage.getItem('audience') || 'everyone';
+  audienceSelect.value = initialAudience;
+  document.body.classList.toggle('dev-mode', initialAudience === 'developers');
+
+  // Handle audience changes
+  audienceSelect.addEventListener('change', (e) => {
+    const isDevMode = e.target.value === 'developers';
+    document.body.classList.toggle('dev-mode', isDevMode);
+    localStorage.setItem('audience', e.target.value);
+    
+    // Update chat button icons
+    updateChatButtonIcons(isDevMode);
+
+    // Check if we should show Copilot suggestion
+    if (isDevMode) {
+      const currentPlatform = document.querySelector(".platform-tag.active");
+      const shouldNotShow = localStorage.getItem("copilot-suggestion-hidden") === "true";
+
+      if (currentPlatform && 
+          currentPlatform.dataset.platform !== "github-copilot" && 
+          !shouldNotShow) {
+        showCopilotSuggestion();
+      }
+    }
+
+    // Trigger prompt filtering
+    filterPrompts();
+  });
+
+  // Fetch GitHub stars
+  fetch("https://api.github.com/repos/f/awesome-chatgpt-prompts")
+    .then((response) => response.json())
+    .then((data) => {
+      const stars = data.stargazers_count;
+      document.getElementById("starCount").textContent = stars.toLocaleString();
+    })
+    .catch((error) => {
+      console.error("Error fetching star count:", error);
+      document.getElementById("starCount").textContent = "50k+";
+    });
+
+  // Create prompt cards
+  createPromptCards();
+
+  // Initialize dark mode
+  const isDarkMode = localStorage.getItem("dark-mode");
+  const toggle = document.querySelector(".dark-mode-toggle");
+  const sunIcon = toggle.querySelector(".sun-icon");
+  const moonIcon = toggle.querySelector(".moon-icon");
+
+  // Set dark mode by default if not set
+  if (isDarkMode === null) {
+    localStorage.setItem("dark-mode", "true");
+    document.body.classList.add("dark-mode");
+    sunIcon.style.display = "none";
+    moonIcon.style.display = "block";
+  } else if (isDarkMode === "true") {
+    document.body.classList.add("dark-mode");
+    sunIcon.style.display = "none";
+    moonIcon.style.display = "block";
+  } else {
+    sunIcon.style.display = "block";
+    moonIcon.style.display = "none";
+  }
+
+  // Initialize search functionality
+  initializeSearch();
+
+  // Initialize language and tone selectors
+  initializeLanguageAndTone();
+
+  // Initialize lazy load
+  initializeLazyLoad();
+});

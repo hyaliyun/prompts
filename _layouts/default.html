@@ -747,8 +747,24 @@
   -webkit-box-orient: vertical;
   margin-bottom: 40px;
 }
+.prompt-card[data-title] .prompt-title,
+.prompt-card[data-content] .prompt-content {
+  background: #f0f0f0;
+  color: transparent;
+  border-radius: 4px;
+}
 
-      .dark-mode .prompt-card {
+.prompt-card[data-title] .prompt-title {
+  width: 80%;
+  height: 24px;
+}
+
+.prompt-card[data-content] .prompt-content {
+  width: 100%;
+  height: 100px;
+  margin-top: 8px;
+}
+.dark-mode .prompt-card {
         background: var(--bg-color-dark);
         border-color: #2d2d2d;
       }
@@ -1934,7 +1950,7 @@
                   <option value="custom">自定义...</option>
                 </select>
                 <input type="text" id="customLanguage" class="custom-input" placeholder="language..." style="display: none;">
-                使用 <select id="toneSelect" class="custom-select">
+                分类<select id="toneSelect" class="custom-select">
                   <option value="professional">专业</option>
                   <option value="casual">休闲</option>
                   <option value="friendly">友好</option>
@@ -1953,7 +1969,7 @@
                   <option value="custom">自定义...</option>
                 </select>
                 <input type="text" id="customTone" class="custom-input" placeholder="tone..." style="display: none;">
-                 对于<select id="audienceSelect" class="custom-select">
+                人员<select id="audienceSelect" class="custom-select">
                   <option value="everyone">每个人</option>
                   <option value="developers">开发人员</option>
                 </select>
@@ -1962,6 +1978,10 @@
           </div>
           <div id="app"></div>
           <script src="script.js"></script>
+          <div class="prompt-card">
+            <div class="prompt-title">Loading...</div>
+            <div class="prompt-content"></div>
+          </div>
         </div>
       </div>
       <footer class="site-footer">
@@ -1986,7 +2006,7 @@
               </a>
               <a href="https://github.com/hyaliyun/prompts" target="_blank" class="book-link">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                GitHub 存储库
+                GitHub存储库
               </a>
               <a href="https://e.3kk3.com" target="_blank" class="book-link">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
